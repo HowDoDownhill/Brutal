@@ -3,11 +3,30 @@
 
 #include "Characters/BaseCharacter.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Net/UnrealNetwork.h"
+
+
 // Sets default values
 ABaseCharacter::ABaseCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	FPCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("First Person Camera"));
+	GetFPCamera()->SetupAttachment(GetRootComponent());
+	GetFPCamera()->bUsePawnControlRotation = true; 
+
+	FPMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("First Person Arms"));
+	GetFPMesh()->SetupAttachment(GetFPCamera());
+	GetFPMesh()->SetCastShadow(false);
+	GetFPMesh()->SetOnlyOwnerSee(true);
+
+	SetCharacterMovementComponent(GetCharacterMovement());
+	GetCharacterMovementComponent()->MaxWalkSpeed = GetMaxWalkSpeed();
+
+	GetMesh()->SetOwnerNoSee(true);
+	
 
 }
 
@@ -29,6 +48,23 @@ void ABaseCharacter::Tick(float DeltaTime)
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
+
+void ABaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ABaseCharacter, MaxWalkSpeed); 
+}
+
+void ABaseCharacter::Server_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)
+{
+	this->MaxWalkSpeed = NewMaxWalkSpeed;
+	OnRep_MaxWalkSpeed(); 
+}
+
+void ABaseCharacter::OnRep_MaxWalkSpeed()
+{
+	GetCharacterMovementComponent()->MaxWalkSpeed = GetMaxWalkSpeed(); 
+}
+
 
