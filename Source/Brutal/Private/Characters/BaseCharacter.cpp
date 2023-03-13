@@ -22,12 +22,12 @@ ABaseCharacter::ABaseCharacter()
 	GetFPMesh()->SetCastShadow(false);
 	GetFPMesh()->SetOnlyOwnerSee(true);
 
+	CurrentWalkSpeed = GetMaxWalkSpeed(); 
 	SetCharacterMovementComponent(GetCharacterMovement());
-	GetCharacterMovementComponent()->MaxWalkSpeed = GetMaxWalkSpeed();
+	GetCharacterMovementComponent()->MaxWalkSpeed = CurrentWalkSpeed; 
 
 	GetMesh()->SetOwnerNoSee(true);
 	
-
 }
 
 // Called when the game starts or when spawned
@@ -53,18 +53,18 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void ABaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(ABaseCharacter, MaxWalkSpeed); 
+	DOREPLIFETIME(ABaseCharacter, CurrentWalkSpeed); 
 }
 
-void ABaseCharacter::Server_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)
+void ABaseCharacter::Server_SetCurrentWalkSpeed_Implementation(float NewCurrentWalkSpeed)
 {
-	this->MaxWalkSpeed = NewMaxWalkSpeed;
-	OnRep_MaxWalkSpeed(); 
+	this->CurrentWalkSpeed = NewCurrentWalkSpeed;
+	OnRep_CurrentWalkSpeed(); 
 }
 
-void ABaseCharacter::OnRep_MaxWalkSpeed()
+void ABaseCharacter::OnRep_CurrentWalkSpeed()
 {
-	GetCharacterMovementComponent()->MaxWalkSpeed = GetMaxWalkSpeed(); 
+	GetCharacterMovementComponent()->MaxWalkSpeed = GetCurrentWalkSpeed(); 
 }
 
 

@@ -50,8 +50,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	UCharacterMovementComponent* CharacterMovementComponent;
 	
-	UPROPERTY(EditDefaultsOnly, ReplicatedUsing = OnRep_MaxWalkSpeed); 
-	float MaxWalkSpeed = 600;
+	UPROPERTY(EditDefaultsOnly); 
+	float MaxWalkSpeed = 750;
+
+	UPROPERTY(ReplicatedUsing = OnRep_CurrentWalkSpeed); 
+	float CurrentWalkSpeed; 
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -64,13 +67,16 @@ public:
 	float GetMaxWalkSpeed() {return MaxWalkSpeed;}
 	
 	UFUNCTION(BlueprintCallable, Server, Reliable)
-	void Server_SetMaxWalkSpeed(float NewMaxWalkSpeed);
+	void Server_SetCurrentWalkSpeed(float NewCurrentWalkSpeed);
+
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentWalkSpeed(){return CurrentWalkSpeed;}
 	
 	UFUNCTION()
-	void OnRep_MaxWalkSpeed();
+	void OnRep_CurrentWalkSpeed();
 	
 	//********Health and Shields********// 
 	
-	    
+	
 
 };
