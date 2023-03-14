@@ -81,3 +81,10 @@ Content/StarterContent/
 Content/Pistol_Pro/
 Content/Rifle_01/
 
+Source/FBX/
+Source/Maya/
+Source/Motionbuilder/
+Source/SKMannequin_A_Pose
+Source/SKMannequin_T_Pose
+Source/*.pdf
+Source/*.txt
